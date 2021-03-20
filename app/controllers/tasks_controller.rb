@@ -1,6 +1,11 @@
 class TasksController < ApplicationController
+  include SessionsHelper
+  
   def index
-    @tasks = Task.all
+    if logged_in?
+      @tasks = current_user.tasks.all
+    end
+    #@tasks = Task.all
   end
 
   def show
@@ -12,7 +17,7 @@ class TasksController < ApplicationController
   end
 
   def create
-    @task = Task.new(task_params)
+    @task = current_user.tasks.build(task_params)
     
     if @task.save
       flash[:success] = 'タスクが正常に登録されました'
