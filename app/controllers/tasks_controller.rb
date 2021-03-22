@@ -9,11 +9,19 @@ class TasksController < ApplicationController
   end
 
   def show
-    @task = Task.find(params[:id])
+    if logged_in?
+      @task = Task.find(params[:id])
+    else
+      redirect_to :root
+    end
   end
 
   def new
-    @task = Task.new
+    if logged_in?
+      @task = Task.new
+    else
+      redirect_to :root
+    end
   end
 
   def create
@@ -29,7 +37,11 @@ class TasksController < ApplicationController
   end
 
   def edit
-    @task = Task.find(params[:id])
+    if logged_in?
+      @task = Task.find(params[:id])
+    else
+      redirect_to :root
+    end      
   end
 
   def update
@@ -54,7 +66,7 @@ class TasksController < ApplicationController
   
   private
 
-    #Strong Parameter
+  #Strong Parameter
   def task_params
     params.require(:task).permit(:content, :status)
   end
