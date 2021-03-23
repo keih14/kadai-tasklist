@@ -1,27 +1,20 @@
 class TasksController < ApplicationController
   include SessionsHelper
+  before_action :require_user_logged_in, only: [:show, :new, :edit]
+  before_action :correct_user, only: [:show, :edit, :update, :destroy]
   
   def index
     if logged_in?
       @tasks = current_user.tasks.all
     end
-    #@tasks = Task.all
   end
 
   def show
-    if logged_in?
       @task = Task.find(params[:id])
-    else
-      redirect_to :root
-    end
   end
 
   def new
-    if logged_in?
       @task = Task.new
-    else
-      redirect_to :root
-    end
   end
 
   def create
@@ -37,11 +30,7 @@ class TasksController < ApplicationController
   end
 
   def edit
-    if logged_in?
       @task = Task.find(params[:id])
-    else
-      redirect_to :root
-    end      
   end
 
   def update
@@ -70,4 +59,18 @@ class TasksController < ApplicationController
   def task_params
     params.require(:task).permit(:content, :status)
   end
+  
+  def require_user_logged_in
+    unless logged_in?
+      redirect_to login_url
+    end
+  end
+  
+  def correct_user
+    @task = current_user.tasks.find_by(id: params[:id])
+    unless @task
+      redirect_to root_url
+    end
+  end
+  
 end
