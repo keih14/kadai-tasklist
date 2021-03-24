@@ -1,12 +1,10 @@
 class TasksController < ApplicationController
   include SessionsHelper
-  before_action :require_user_logged_in, only: [:show, :new, :edit]
+  before_action :require_user_logged_in, only: [:index, :show, :new, :edit]
   before_action :correct_user, only: [:show, :edit, :update, :destroy]
   
   def index
-    if logged_in?
       @tasks = current_user.tasks.all
-    end
   end
 
   def show
@@ -27,10 +25,6 @@ class TasksController < ApplicationController
       flash.now[:danger] = 'タスクが登録されませんでした'
       render :new
     end
-  end
-
-  def edit
-      @task = Task.find(params[:id])
   end
 
   def update
