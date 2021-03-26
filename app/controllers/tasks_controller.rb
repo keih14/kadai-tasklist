@@ -1,6 +1,6 @@
 class TasksController < ApplicationController
   include SessionsHelper
-  before_action :require_user_logged_in, only: [:index, :show, :new, :edit]
+  before_action :require_user_logged_in
   before_action :correct_user, only: [:show, :edit, :update, :destroy]
   
   def index
@@ -52,12 +52,6 @@ class TasksController < ApplicationController
   #Strong Parameter
   def task_params
     params.require(:task).permit(:content, :status)
-  end
-  
-  def require_user_logged_in
-    unless logged_in?
-      redirect_to login_url
-    end
   end
   
   def correct_user
